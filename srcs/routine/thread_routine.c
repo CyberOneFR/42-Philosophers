@@ -6,7 +6,7 @@
 /*   By: ethebaul <ethebaul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 20:35:33 by ethebaul          #+#    #+#             */
-/*   Updated: 2025/06/27 20:44:57 by ethebaul         ###   ########.fr       */
+/*   Updated: 2025/06/27 20:54:45 by ethebaul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,17 +116,17 @@ int	eat(t_thread_data *arg, t_time *last, int *limit)
 	gettimeofday(last, NULL);
 	if (dsleep(arg->settings->eat * 1000, arg, last))
 		return (1);
-	plog(arg, "is sleeping");
 	pthread_mutex_lock(arg->left_mutex);
 	*arg->left_fork = 1;
 	pthread_mutex_unlock(arg->left_mutex);
 	pthread_mutex_lock(arg->right_mutex);
 	*arg->right_fork = 1;
 	pthread_mutex_unlock(arg->right_mutex);
+	if (*limit >= arg->settings->limit)
+		return (0);
+	plog(arg, "is sleeping");
 	if (dsleep(arg->settings->sleep * 1000, arg, last))
 		return (1);
 	plog(arg, "is thinking");
-	if (dsleep(1000, arg, last))
-		return (1);
 	return (0);
 }

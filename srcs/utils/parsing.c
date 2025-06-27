@@ -6,7 +6,7 @@
 /*   By: ethebaul <ethebaul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 10:00:44 by ethebaul          #+#    #+#             */
-/*   Updated: 2025/06/27 16:29:53 by ethebaul         ###   ########.fr       */
+/*   Updated: 2025/06/27 21:49:58 by ethebaul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,27 +16,22 @@ int	ft_atoi(char *str, int *ret)
 {
 	int	sign;
 	int	nbr;
-	int	of;
+	int	overflow;
 
-	of = 0;
-	sign = 1;
 	nbr = 0;
+	sign = 1;
 	while (*str == ' ' || *str == '	')
 		++str;
-	while (*str == '+' || *str == '-')
-	{
-		sign = 44 - *str;
-		++str;
-	}
+	if (*str == '+' || *str == '-')
+		sign = 44 - *(str++);
 	while (*str >= '0' && *str <= '9')
 	{
-		if (__builtin_smul_overflow(nbr, 10, &nbr) || \
-		__builtin_sadd_overflow(nbr, *str - '0', &nbr))
-			of = 1;
+		overflow = __builtin_smul_overflow(nbr, 10, &nbr);
+		overflow = __builtin_sadd_overflow(nbr, *str - '0', &nbr);
 		++str;
 	}
 	__builtin_smul_overflow(nbr, sign, ret);
-	return (of);
+	return (overflow);
 }
 
 int	only_digit(char *str)

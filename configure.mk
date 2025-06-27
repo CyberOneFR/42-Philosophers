@@ -12,7 +12,7 @@
 
 -include $(MKCOLOR)
 
-configure: clangd fclean
+configure: fclean
 	@echo -n "HEADERS =	" > $(MKGENERATED)
 	@for i in $$(find $(HEADERS_DIR) -type d);\
 	do\

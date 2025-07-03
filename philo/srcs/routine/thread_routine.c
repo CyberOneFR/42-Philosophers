@@ -6,12 +6,14 @@
 /*   By: ethebaul <ethebaul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 20:35:33 by ethebaul          #+#    #+#             */
-/*   Updated: 2025/06/27 20:54:45 by ethebaul         ###   ########.fr       */
+/*   Updated: 2025/07/03 23:58:27 by ethebaul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 #include <pthread.h>
+
+#include <unistd.h>
 
 void	*thread_routine(t_thread_data *arg)
 {
@@ -24,9 +26,10 @@ void	*thread_routine(t_thread_data *arg)
 	gettimeofday(&last, NULL);
 	pthread_mutex_lock(arg->ctl_mutex);
 	pthread_mutex_unlock(arg->ctl_mutex);
-	pthread_mutex_lock(arg->sig_mutex);
 	if (arg->id % 2 == 0)
-		usleep(500);
+		if (dsleep(arg->settings->sleep * 500, arg, &last))
+			pthread_exit(0);
+	pthread_mutex_lock(arg->sig_mutex);
 	while (*arg->sig != 1)
 	{
 		pthread_mutex_unlock(arg->sig_mutex);
@@ -112,10 +115,10 @@ int	fright(t_thread_data *arg, t_time *last)
 int	eat(t_thread_data *arg, t_time *last, int *limit)
 {
 	plog(arg, "is eating");
-	++*limit;
 	gettimeofday(last, NULL);
 	if (dsleep(arg->settings->eat * 1000, arg, last))
 		return (1);
+	++*limit;
 	pthread_mutex_lock(arg->left_mutex);
 	*arg->left_fork = 1;
 	pthread_mutex_unlock(arg->left_mutex);
@@ -128,5 +131,7 @@ int	eat(t_thread_data *arg, t_time *last, int *limit)
 	if (dsleep(arg->settings->sleep * 1000, arg, last))
 		return (1);
 	plog(arg, "is thinking");
+	if (dsleep(500, arg, last))
+		return (1);
 	return (0);
 }

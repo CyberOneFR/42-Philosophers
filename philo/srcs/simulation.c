@@ -6,12 +6,11 @@
 /*   By: ethebaul <ethebaul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/21 10:05:45 by ethebaul          #+#    #+#             */
-/*   Updated: 2025/06/24 18:46:59 by ethebaul         ###   ########.fr       */
+/*   Updated: 2025/07/04 09:48:19 by ethebaul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
-#include <sys/time.h>
 
 int	setup(t_env *env, t_settings *set, int philo)
 {
